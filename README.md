@@ -14,16 +14,17 @@
 
 - RELU
 
-  > The most commonly used activation function. It's high use is facilitated by it's simplicity.
-  >
-  >  A negative number has its MSB as 1. So, to perform RELU, only the MSB needs to be checked, which is super-fast. 
-  >
-  > ```python
-  > relu = lambda x: x if x >= 0 else 0
-  > 
-  > # torch implementation
-  > relu = lambda x: torch.clamp(x, min=0)
-  > ```
+  ```python
+  """
+  The most commonly used activation function. It's high use is facilitated by it's simplicity.
+  A negative number has its MSB as 1. So, to perform RELU, only the MSB needs to be checked, which is super-fast. 
+  """"
+  
+  relu = lambda x: x if x >= 0 else 0
+  
+  # torch implementation
+  relu = lambda x: torch.clamp(x, min=0)
+  ```
 
 - Sigmoid
 
