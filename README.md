@@ -29,31 +29,31 @@
   Broadcasting is the method by which any scalar, vector or matrix, tensor of a lower dimension, can be expanded to have the dimension of a higher rank tensor. 
   Broadcasting is carried on unit axes.
   """
-  ```
-  ```python
+  
   # Broadcasting with a scalar
   m = torch.tensor([[1., 2., 3.], [4., 5., 6.], [7., 8., 9.]])
   
   a = torch.tensor([1., 2., 3.])
   a.expand_as(m)
-  ```
-  >  tensor([[1., 2., 3.],
-          [1., 2., 3.],
-          [1., 2., 3.]])
   
-  ```python
+  > tensor([[1., 2., 3.],
+            [1., 2., 3.],
+            [1., 2., 3.]])
+  
+  # Adding a new axis at the end
   a[:, None] * 2
-  ```
-  > tensor([[2.],
-        [4.],
-        [6.]])
-  ```python
-  torch.tensor(2).expand_as(m)
-  ```
-  > tensor([[2, 2, 2],
-        [2, 2, 2],
-        [2, 2, 2]])
   
+  > tensor([[2.],
+            [4.],
+            [6.]])
+  
+  # Expand 2 to have the same shape as m
+  torch.tensor(2).expand_as(m)
+  
+  > tensor([[2, 2, 2],
+            [2, 2, 2],
+            [2, 2, 2]])
+  ```
 - Computing a nn's output
 
 - train / dev /test splits
