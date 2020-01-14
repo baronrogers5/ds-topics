@@ -171,9 +171,77 @@
   - cutout
 - **Pooling** 
   - MaxPooling
+  
+    ```python
+    """
+    MaxPool reduces the size of an image, by taking the maximum valued pixel in each convolution.
+    MaxPooling or stride 2 convs can be used for reducing the size of an image.
+    Generally we use a (2x2) kernel with a stride of 2.
+    This reduces the size of an image by half, i.e. (nxn) -Maxpool-> (n//2 x n//2)
+    If we want our networks to train faster, we go for stride 2 convs as the number of 
+    times each pixel in the central area undergoes computation is less than MaxPooling.
+    That being said, maxpool certainly provides better results.
+    """
+    
+    # keras
+    x = tf.keras.layers.MaxPooling2D()(x)
+    # torch
+    x = torch.nn.MaxPool2d((2, 2), stride=2)(x)
+    ```
+  
+    
+  
   - AveragePooling
+  
+    ```python
+    """
+    Similar to MAxPooling but instead of taking the maximum pixel value, an average of
+    all pixels is taken.
+    """
+    
+    # keras
+    x = tf.keras.layers.AveragePooling2D()(x)
+    # torch
+    x = torch.nn.AvgPool2d((2, 2), stride=2)(x)
+    ```
+  
+    
+  
   - Global Average Pooling
+  
+    ```python
+    """
+    Consider a (batch, h: 7, w: 7, channels: 512) tensor. Applying GAP on the tensor, calcuates the mean of all (7x7) pixels along the channel axis.
+    The resulting tensor has a shape (batch, channels: 512).
+    This can be followed by dense layers, which reduce the nodes to the categories required for prediction.
+    GAP is powerful as it helps ascertain the most important portions of the image per channel that is responsible for making the prediction.
+    """
+    
+    # keras 
+    tf.keras.layers.GlobalAveragePooling2D()(x)
+    # torch
+    x = torch.nn.AdaptiveAvgPool2d(1)(x)
+    x = torch.nn.Flatten()(x)
+    ```
+  
+    
+  
   - Global Max Pooling
+  
+    ```python
+    """
+    Similar to GAP, only difference is that insted of mean, max value of feature maps are chosen.
+    """
+    
+    # keras
+    tf.keras.layers.GlobalMaxPooling2D()(x)
+    # torch
+    x = torch.nn.AdaptiveMaxPool2d(1)(x)
+    x = torch.nn.Flatten()(x)
+    
+    ```
+  
+    
 - **Architectures**
   - Renets (Skip Connection)
   - Inception
@@ -204,8 +272,47 @@
   - 1D and 3D Generalizations
 - **Generative Adversarial Networks**
   - UNets
+  
   - Pre-training the encoder
-  -  The middle convs
+  
+    ```python
+    """
+    The complete arch used is a UNet.
+    We generally use resnet34 as the encoder. 
+    GANs have a particularly hard time training if the generator and critic are not pretrained.
+    
+    Pre training involves that the generator knows the content of the images well.
+    This is achieved by setting MSE as the loss func.
+    """
+    src = ImageImageList.from_folder(path_crappy).split_by_rand_pct(0.1, seed=42)
+    
+    def get_data(bs=bs, sz=sz):
+        data = (src.label_from_func(lambda img_path: path_orig/img_path.name)
+                .transform(get_transforms(max_zoom=0.2), size=sz, tfm_y=True)
+                .databunch(bs=bs).normalize(imagenet_stats, do_y=True))
+        
+        data.c = 3
+        return data
+    
+    data_gen = get_data()
+    
+    wd = 1e-3
+    y_range= (-3., 3.)
+    loss_func = MSELossFlat()
+    
+    def create_gan_learner():
+        return unet_learner(data_gen, arch=models.resnet34, blur=True, 		 	norm_type=NormType.Weight, y_range=y_range, self_attention=True, wd=wd, loss_func=loss_func)
+    
+    learn_gen.fit_one_cycle(3, slice(some_lr_range))
+    ```
+  
+    
+  
+  - The middle convs
+  
+  - Pre-training the critic
+  
   - The cross connections
+  
   - Passing of inputs as a feature to final prediction
 
