@@ -1,13 +1,61 @@
 ## General Stuff
 
 - What is a neural network ?
+
+  ```python
+  """
+  A neural network is a universal function approximator. 
+  It is a non-linear function that tries to map the inputs to the outputs.
+  It works on the principle that given enough non-linearity, any input can be approximated to it's output.
+  """
+  
+  y = f(x) # f -> neural network
+  ```
+
 - Binary Classification
+
 - Logistic Regression
+
 - Linear Regression
+
 - Logistic Regression Cost Function
+
 - Derivatives
+
 - Broadcasting
+
+  ```python
+  """
+  Broadcasting is the method by which any scalar, vector or matrix, tensor of a lower dimension, can be expanded to have the dimension of a higher rank tensor. 
+  Broadcasting is carried on unit axes.
+  """
+  ```
+  ```python
+  # Broadcasting with a scalar
+  m = torch.tensor([[1., 2., 3.], [4., 5., 6.], [7., 8., 9.]])
+  
+  a = torch.tensor([1., 2., 3.])
+  a.expand_as(m)
+  ```
+  >  tensor([[1., 2., 3.],
+          [1., 2., 3.],
+          [1., 2., 3.]])
+  
+  ```python
+  a[:, None] * 2
+  ```
+  > tensor([[2.],
+        [4.],
+        [6.]])
+  ```python
+  torch.tensor(2).expand_as(m)
+  ```
+  > tensor([[2, 2, 2],
+        [2, 2, 2],
+        [2, 2, 2]])
+  
 - Computing a nn's output
+
 - train / dev /test splits
 
 ## Activation Functions
